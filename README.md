@@ -4,6 +4,15 @@ A fast, modular, and fully-featured Neovim 0.12 configuration tailored for **C &
 
 ---
 
+## 🚀 Cross-Platform Installation (Ubuntu, Arch, Fedora, macOS)
+
+Run the included automated setup script:
+```bash
+./setup.sh
+```
+
+---
+
 ## 🌟 Highlights
 
 - **⚡ Fast & Modern**: Built natively for Neovim 0.12 using the native `vim.lsp.config` & `vim.lsp.enable()` API and `lazy.nvim`.
@@ -257,9 +266,7 @@ Leader key is set to **`<Space>`**. Pressing `<Space>` will bring up an interact
 
 ---
 
-## 🚀 Cross-Platform Installation (Ubuntu, Arch, Fedora, macOS)
+## 📄 License
 
-Run the included automated setup script:
-```bash
-./setup.sh
-```
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
