@@ -1,5 +1,9 @@
 # Modern Full-Stack Neovim 0.12 Configuration
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Neovim](https://img.shields.io/badge/Neovim-0.12+-57A143?logo=neovim&logoColor=white)](https://neovim.io)
+[![Lua](https://img.shields.io/badge/Lua-5.1-000080?logo=lua&logoColor=white)](https://www.lua.org)
+
 A fast, modular, and fully-featured Neovim 0.12 configuration tailored for **C & C++**, **Rust**, **Web Development (React, TypeScript, JavaScript, HTML, CSS, Tailwind)**, **Python**, and **Go (Golang)** software engineering.
 
 ---
