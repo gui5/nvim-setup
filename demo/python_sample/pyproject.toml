@@ -1,0 +1,18 @@
+[project]
+name = "python-sample"
+version = "0.1.0"
+description = "Python demo project for Neovim 0.12"
+readme = "README.md"
+requires-python = ">=3.10"
+
+[tool.ruff]
+line-length = 88
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "UP", "B", "A", "C4", "SIM"]
+ignore = []
+
+[tool.pyright]
+include = ["."]
+typeCheckingMode = "basic"
