@@ -52,6 +52,12 @@ autocmd("FileType", {
 autocmd("BufReadPost", {
     group = general_group,
     callback = function(event)
+        local exclude_ft = { "gitcommit", "gitrebase", "hgcommit" }
+        local ft = vim.bo[event.buf].filetype
+        local bt = vim.bo[event.buf].buftype
+        if vim.tbl_contains(exclude_ft, ft) or bt ~= "" then
+            return
+        end
         local mark = vim.api.nvim_buf_get_mark(event.buf, '"')
         local line_count = vim.api.nvim_buf_line_count(event.buf)
         if mark[1] > 0 and mark[1] <= line_count then

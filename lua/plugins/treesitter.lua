@@ -5,6 +5,7 @@ return {
         "nvim-treesitter/nvim-treesitter",
         lazy = false,
         priority = 900,
+        build = ":TSUpdate",
         dependencies = {
             "nvim-treesitter/nvim-treesitter-textobjects",
             "nvim-treesitter/nvim-treesitter-context",
@@ -19,16 +20,13 @@ return {
 
             -- Ensure required parsers for C, C++, Rust, Web, Python, Go, and tools are installed
             local target_parsers = {
-                -- C & C++
                 "c",
                 "cpp",
                 "cmake",
                 "make",
                 "ninja",
-                -- Rust
                 "rust",
                 "ron",
-                -- Config & Scripting
                 "lua",
                 "vim",
                 "vimdoc",
@@ -37,56 +35,24 @@ return {
                 "json5",
                 "yaml",
                 "toml",
-                -- Markdown & Docs
                 "markdown",
                 "markdown_inline",
                 "latex",
                 "dockerfile",
-                -- Web (React, TypeScript, JavaScript, HTML, CSS)
                 "javascript",
                 "typescript",
                 "tsx",
                 "html",
                 "css",
                 "scss",
-                -- Python
                 "python",
-                -- Go (Golang)
                 "go",
                 "gomod",
                 "gowork",
                 "gosum",
             }
 
-            -- Ensure query directory symlinks exist in site/queries for all target parsers
-            local runtime_queries = vim.fs.joinpath(vim.fn.stdpath("data"), "lazy", "nvim-treesitter", "runtime", "queries")
-            local site_queries = vim.fs.joinpath(site_dir, "queries")
-            if vim.fn.isdirectory(runtime_queries) == 1 then
-                vim.fn.mkdir(site_queries, "p")
-                for _, lang in ipairs(target_parsers) do
-                    local src = vim.fs.joinpath(runtime_queries, lang)
-                    local dest = vim.fs.joinpath(site_queries, lang)
-                    if vim.fn.isdirectory(src) == 1 and vim.fn.isdirectory(dest) == 0 and not vim.uv.fs_lstat(dest) then
-                        pcall(vim.uv.fs_symlink, src, dest)
-                    end
-                end
-            end
-
-            local ok_cfg, ts_cfg = pcall(require, "nvim-treesitter.config")
-            if ok_cfg then
-                local installed = ts_cfg.get_installed()
-                local to_install = {}
-                for _, p in ipairs(target_parsers) do
-                    if not vim.tbl_contains(installed, p) then
-                        table.insert(to_install, p)
-                    end
-                end
-                if #to_install > 0 then
-                    pcall(function()
-                        require("nvim-treesitter.install").install(to_install, { summary = false })
-                    end)
-                end
-            end
+            pcall(ts.install, target_parsers)
 
             -- Enable treesitter highlighting automatically for supported buffers
             vim.api.nvim_create_autocmd("FileType", {
