@@ -9,7 +9,7 @@ return {
             {
                 "<leader>cf",
                 function()
-                    require("conform").format({ async = true, lsp_fallback = true })
+                    require("conform").format({ async = true, lsp_format = "fallback" })
                 end,
                 mode = { "n", "v" },
                 desc = "Format: Buffer / Selection",
@@ -31,7 +31,7 @@ return {
                 cuda = { "clang_format" },
 
                 -- CMake & Lua
-                cmake = { "neocmakelsp" },
+                cmake = { "gersemi", lsp_format = "fallback" },
                 lua = { "stylua" },
 
                 -- Web: TypeScript, JavaScript, React, HTML, CSS, JSON, YAML
@@ -48,6 +48,10 @@ return {
                 yaml = { "prettierd", "prettier", stop_after_first = true },
                 markdown = { "prettierd", "prettier", stop_after_first = true },
 
+                -- Shell (shfmt)
+                sh = { "shfmt" },
+                bash = { "shfmt" },
+
                 -- Python (Ruff with Black / isort fallback)
                 python = { "ruff_fix", "ruff_format" },
 
@@ -62,11 +66,6 @@ return {
                     command = "clang-format",
                     args = { "-assume-filename", "$FILENAME" },
                 },
-                neocmakelsp = {
-                    command = "neocmakelsp",
-                    args = { "format", "$FILENAME" },
-                    stdin = false,
-                },
             },
             format_on_save = function(bufnr)
                 if vim.g.autoformat_enabled == false then
@@ -79,7 +78,7 @@ return {
                 end
                 return {
                     timeout_ms = 800,
-                    lsp_fallback = true,
+                    lsp_format = "fallback",
                 }
             end,
         },

@@ -35,6 +35,7 @@ return {
                     "pyright",
                     "ruff",
                     "gopls",
+                    "bashls",
                 },
                 automatic_installation = true,
             })
@@ -44,6 +45,17 @@ return {
             local has_blink, blink = pcall(require, "blink.cmp")
             if has_blink then
                 capabilities = blink.get_lsp_capabilities(capabilities)
+            end
+
+            -- Root directory helper with fallback for single files
+            local function make_root_dir(markers)
+                return function(bufnr, on_dir)
+                    local fname = vim.api.nvim_buf_get_name(bufnr)
+                    local root = vim.fs.root(fname, markers) or vim.fs.dirname(fname)
+                    if root and root ~= "" then
+                        on_dir(root)
+                    end
+                end
             end
 
             -- Global LspAttach handler for keymaps and buffer setup
@@ -131,7 +143,7 @@ return {
                     "--fallback-style=llvm",
                 },
                 filetypes = { "c", "cpp", "objc", "objcpp", "cuda" },
-                root_markers = {
+                root_dir = make_root_dir({
                     ".clangd",
                     ".clang-tidy",
                     ".clang-format",
@@ -141,7 +153,7 @@ return {
                     "CMakeLists.txt",
                     "Makefile",
                     ".git",
-                },
+                }),
                 capabilities = capabilities,
                 init_options = {
                     usePlaceholders = true,
@@ -156,7 +168,7 @@ return {
             vim.lsp.config["neocmake"] = {
                 cmd = { "neocmakelsp", "stdio" },
                 filetypes = { "cmake" },
-                root_markers = { "CMakeLists.txt", "build.ninja", ".git" },
+                root_dir = make_root_dir({ "CMakeLists.txt", "build.ninja", ".git" }),
                 capabilities = capabilities,
                 init_options = {
                     format = {
@@ -172,7 +184,7 @@ return {
             vim.lsp.config["ts_ls"] = {
                 cmd = { "typescript-language-server", "--stdio" },
                 filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
-                root_markers = { "tsconfig.json", "jsconfig.json", "package.json", ".git" },
+                root_dir = make_root_dir({ "tsconfig.json", "jsconfig.json", "package.json", ".git" }),
                 capabilities = capabilities,
                 settings = {
                     javascript = {
@@ -206,7 +218,7 @@ return {
             vim.lsp.config["tailwindcss"] = {
                 cmd = { "tailwindcss-language-server", "--stdio" },
                 filetypes = { "html", "css", "scss", "javascript", "javascriptreact", "typescript", "typescriptreact" },
-                root_markers = {
+                root_dir = make_root_dir({
                     "tailwind.config.js",
                     "tailwind.config.ts",
                     "tailwind.config.cjs",
@@ -214,7 +226,7 @@ return {
                     "postcss.config.js",
                     "package.json",
                     ".git",
-                },
+                }),
                 capabilities = capabilities,
             }
 
@@ -224,14 +236,14 @@ return {
             vim.lsp.config["html"] = {
                 cmd = { "vscode-html-language-server", "--stdio" },
                 filetypes = { "html", "templ" },
-                root_markers = { "package.json", ".git" },
+                root_dir = make_root_dir({ "package.json", ".git" }),
                 capabilities = capabilities,
             }
 
             vim.lsp.config["cssls"] = {
                 cmd = { "vscode-css-language-server", "--stdio" },
                 filetypes = { "css", "scss", "less" },
-                root_markers = { "package.json", ".git" },
+                root_dir = make_root_dir({ "package.json", ".git" }),
                 capabilities = capabilities,
             }
 
@@ -239,18 +251,6 @@ return {
             -- 6. Web: ESLint
             -- -----------------------------------------------------------------
             vim.lsp.config["eslint"] = {
-                cmd = { "vscode-eslint-language-server", "--stdio" },
-                filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
-                root_markers = {
-                    ".eslintrc",
-                    ".eslintrc.js",
-                    ".eslintrc.cjs",
-                    ".eslintrc.json",
-                    "eslint.config.js",
-                    "eslint.config.mjs",
-                    "package.json",
-                    ".git",
-                },
                 capabilities = capabilities,
             }
 
@@ -260,7 +260,7 @@ return {
             vim.lsp.config["emmet_language_server"] = {
                 cmd = { "emmet-language-server", "--stdio" },
                 filetypes = { "css", "html", "javascriptreact", "typescriptreact", "sass", "scss", "less" },
-                root_markers = { "package.json", ".git" },
+                root_dir = make_root_dir({ "package.json", ".git" }),
                 capabilities = capabilities,
             }
 
@@ -270,7 +270,7 @@ return {
             vim.lsp.config["pyright"] = {
                 cmd = { "pyright-langserver", "--stdio" },
                 filetypes = { "python" },
-                root_markers = {
+                root_dir = make_root_dir({
                     "pyproject.toml",
                     "setup.py",
                     "setup.cfg",
@@ -278,7 +278,7 @@ return {
                     "Pipfile",
                     "pyrightconfig.json",
                     ".git",
-                },
+                }),
                 capabilities = capabilities,
                 settings = {
                     python = {
@@ -295,7 +295,7 @@ return {
             vim.lsp.config["ruff"] = {
                 cmd = { "ruff", "server" },
                 filetypes = { "python" },
-                root_markers = {
+                root_dir = make_root_dir({
                     "pyproject.toml",
                     "ruff.toml",
                     ".ruff.toml",
@@ -303,7 +303,7 @@ return {
                     "setup.cfg",
                     "requirements.txt",
                     ".git",
-                },
+                }),
                 capabilities = capabilities,
             }
 
@@ -313,13 +313,17 @@ return {
             vim.lsp.config["gopls"] = {
                 cmd = { "gopls" },
                 filetypes = { "go", "gomod", "gowork" },
-                root_markers = { "go.work", "go.mod", ".git" },
+                root_dir = make_root_dir({ "go.work", "go.mod", ".git" }),
                 capabilities = capabilities,
                 settings = {
                     gopls = {
                         analyses = {
                             unusedparams = true,
                             shadow = true,
+                            nilness = true,
+                            unusedwrite = true,
+                            useany = true,
+                            unusedvariable = true,
                         },
                         staticcheck = true,
                         completeUnimported = true,
@@ -343,7 +347,7 @@ return {
             vim.lsp.config["lua_ls"] = {
                 cmd = { "lua-language-server" },
                 filetypes = { "lua" },
-                root_markers = { ".luarc.json", ".luarc.jsonc", ".git" },
+                root_dir = make_root_dir({ ".luarc.json", ".luarc.jsonc", ".git" }),
                 capabilities = capabilities,
                 settings = {
                     Lua = {
@@ -367,8 +371,23 @@ return {
             vim.lsp.config["marksman"] = {
                 cmd = { "marksman", "server" },
                 filetypes = { "markdown", "markdown.mdx" },
-                root_markers = { ".marksman.toml", ".git" },
+                root_dir = make_root_dir({ ".marksman.toml", ".git" }),
                 capabilities = capabilities,
+            }
+
+            -- -----------------------------------------------------------------
+            -- 12. Shell: Bash Language Server (with ShellCheck diagnostics)
+            -- -----------------------------------------------------------------
+            vim.lsp.config["bashls"] = {
+                cmd = { "bash-language-server", "start" },
+                filetypes = { "sh", "bash" },
+                root_dir = make_root_dir({ ".git" }),
+                capabilities = capabilities,
+                settings = {
+                    bashIde = {
+                        globPattern = "*@(.sh|.inc|.bash|.command)",
+                    },
+                },
             }
 
             -- Enable all configured language servers (rust-analyzer is managed by rustaceanvim)
@@ -386,6 +405,7 @@ return {
                 "gopls",
                 "lua_ls",
                 "marksman",
+                "bashls",
             })
         end,
     },

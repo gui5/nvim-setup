@@ -65,7 +65,7 @@ return {
                             vim.cmd.RustLsp("expandMacro")
                         end, "Expand Macro")
 
-                        map("n", "<leader>cd", function()
+                        map("n", "<leader>co", function()
                             vim.cmd.RustLsp("openDocs")
                         end, "Open docs.rs")
 

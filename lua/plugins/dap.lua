@@ -173,7 +173,7 @@ return {
                     end,
                     args = function()
                         local args_str = vim.fn.input("Arguments: ")
-                        return vim.split(args_str, " +")
+                        return vim.split(args_str, "%s+", { trimempty = true })
                     end,
                     cwd = "${workspaceFolder}",
                     stopAtBeginningOfMainSubprogram = false,

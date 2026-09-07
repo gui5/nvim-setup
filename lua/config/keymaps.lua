@@ -4,10 +4,10 @@ local map = vim.keymap.set
 local opts = { noremap = true, silent = true }
 
 -- Better window navigation
-map("n", "<C-h>", "<C-w>h", { desc = "Navigate to left window", unpack(opts) })
-map("n", "<C-j>", "<C-w>j", { desc = "Navigate to lower window", unpack(opts) })
-map("n", "<C-k>", "<C-w>k", { desc = "Navigate to upper window", unpack(opts) })
-map("n", "<C-l>", "<C-w>l", { desc = "Navigate to right window", unpack(opts) })
+map("n", "<C-h>", "<C-w>h", { desc = "Navigate to left window" })
+map("n", "<C-j>", "<C-w>j", { desc = "Navigate to lower window" })
+map("n", "<C-k>", "<C-w>k", { desc = "Navigate to upper window" })
+map("n", "<C-l>", "<C-w>l", { desc = "Navigate to right window" })
 
 -- Window split management
 map("n", "<leader>sv", "<C-w>v", { desc = "Split window vertically" })
@@ -20,7 +20,14 @@ map("n", "<S-h>", "<cmd>bprevious<CR>", { desc = "Previous buffer" })
 map("n", "<S-l>", "<cmd>bnext<CR>", { desc = "Next buffer" })
 map("n", "<leader>bd", "<cmd>bdelete<CR>", { desc = "Delete/Close buffer" })
 map("n", "<leader>bD", "<cmd>bdelete!<CR>", { desc = "Force delete buffer" })
-map("n", "<leader>ba", "<cmd>%bd|e#|bd#<CR>", { desc = "Close all other buffers" })
+map("n", "<leader>ba", function()
+    local current = vim.api.nvim_get_current_buf()
+    for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+        if buf ~= current and vim.api.nvim_buf_is_valid(buf) and vim.bo[buf].buflisted then
+            pcall(vim.api.nvim_buf_delete, buf, { force = false })
+        end
+    end
+end, { desc = "Close all other buffers" })
 
 -- Fast saving and quitting
 map("n", "<leader>w", "<cmd>w<CR>", { desc = "Save file" })

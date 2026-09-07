@@ -54,10 +54,7 @@ return {
         cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
         ft = { "markdown" },
         build = function()
-            local app_dir = vim.fn.stdpath("data") .. "/lazy/markdown-preview.nvim/app"
-            if vim.fn.isdirectory(app_dir) == 1 then
-                vim.fn.system("cd '" .. app_dir .. "' && npm install")
-            end
+            vim.fn["mkdp#util#install"]()
         end,
         init = function()
             vim.g.mkdp_auto_start = 0

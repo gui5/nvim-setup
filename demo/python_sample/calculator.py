@@ -1,7 +1,5 @@
 """Math calculation utilities with type annotations and docstrings."""
 
-from typing import List
-
 
 class MathEngine:
     """A clean mathematical computation engine."""
@@ -17,13 +15,13 @@ class MathEngine:
         """Return the product of two numbers."""
         return a * b
 
-    def fibonacci(self, n: int) -> List[int]:
+    def fibonacci(self, n: int) -> list[int]:
         """Compute the first n Fibonacci numbers."""
         if n <= 0:
             return []
         if n == 1:
             return [0]
-        sequence: List[int] = [0, 1]
+        sequence: list[int] = [0, 1]
         while len(sequence) < n:
             sequence.append(sequence[-1] + sequence[-2])
         return sequence
