@@ -92,6 +92,7 @@ return {
                         cmd = cmd,
                         direction = "float",
                         close_on_exit = false,
+                        count = 99,
                         float_opts = {
                             border = "rounded",
                             winblend = 0,
@@ -116,7 +117,12 @@ return {
             -- Multi-Language Compile & Run (<leader>rc)
             vim.keymap.set("n", "<leader>rc", function()
                 local file = vim.fn.expand("%:p")
-                local rel_file = vim.fn.expand("%")
+                if file == "" then
+                    vim.notify("No file to run in current buffer", vim.log.levels.WARN)
+                    return
+                end
+                vim.cmd("silent! update")
+
                 local output = vim.fn.expand("%:p:r")
                 local ft = vim.bo.filetype
                 local c_comp = (vim.fn.executable("gcc") == 1) and "gcc" or "clang"
@@ -164,6 +170,7 @@ return {
 
             -- Multi-Language Test Runner (<leader>rt)
             vim.keymap.set("n", "<leader>rt", function()
+                vim.cmd("silent! update")
                 local ft = vim.bo.filetype
                 if ft == "rust" then
                     local cargo_toml = find_marker("Cargo.toml")
@@ -211,6 +218,12 @@ return {
             -- AddressSanitizer (<leader>ra) for C/C++
             vim.keymap.set("n", "<leader>ra", function()
                 local file = vim.fn.expand("%:p")
+                if file == "" then
+                    vim.notify("No file to run in current buffer", vim.log.levels.WARN)
+                    return
+                end
+                vim.cmd("silent! update")
+
                 local output = vim.fn.expand("%:p:r") .. "_asan"
                 local ft = vim.bo.filetype
                 local c_comp = (vim.fn.executable("gcc") == 1) and "gcc" or "clang"
@@ -228,8 +241,14 @@ return {
             -- Valgrind memory leak check (<leader>rv)
             vim.keymap.set("n", "<leader>rv", function()
                 local file = vim.fn.expand("%:p")
-                local output = vim.fn.expand("%:p:r")
                 local ft = vim.bo.filetype
+                if (ft == "c" or ft == "cpp") and file == "" then
+                    vim.notify("No file to check in current buffer", vim.log.levels.WARN)
+                    return
+                end
+                vim.cmd("silent! update")
+
+                local output = vim.fn.expand("%:p:r")
                 local c_comp = (vim.fn.executable("gcc") == 1) and "gcc" or "clang"
                 local cpp_comp = (vim.fn.executable("g++") == 1) and "g++ -std=c++20" or "clang++ -std=c++20"
 

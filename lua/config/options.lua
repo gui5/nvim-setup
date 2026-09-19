@@ -19,6 +19,7 @@ opt.ignorecase = true
 opt.smartcase = true
 opt.hlsearch = true
 opt.incsearch = true
+opt.inccommand = "split"
 
 -- Appearance & UI
 opt.termguicolors = true
@@ -80,10 +81,10 @@ vim.diagnostic.config({
     },
     signs = {
         text = {
-            [vim.diagnostic.severity.ERROR] = " ",
-            [vim.diagnostic.severity.WARN] = " ",
-            [vim.diagnostic.severity.INFO] = " ",
-            [vim.diagnostic.severity.HINT] = " ",
+            [vim.diagnostic.severity.ERROR] = "✘",
+            [vim.diagnostic.severity.WARN] = "▲",
+            [vim.diagnostic.severity.INFO] = "ℹ",
+            [vim.diagnostic.severity.HINT] = "󰌶",
         },
     },
     underline = true,

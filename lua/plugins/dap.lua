@@ -143,6 +143,7 @@ return {
                     end,
                     cwd = "${workspaceFolder}",
                     stopAtBeginningOfMainSubprogram = false,
+                    stopOnEntry = false,
                 },
                 {
                     name = "Launch with GDB",
@@ -177,6 +178,7 @@ return {
                     end,
                     cwd = "${workspaceFolder}",
                     stopAtBeginningOfMainSubprogram = false,
+                    stopOnEntry = false,
                 },
                 {
                     name = "Attach to Process (GDB)",

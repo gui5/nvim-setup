@@ -49,7 +49,7 @@ return {
 
                         -- Inlay Hints Toggle
                         if client and client.server_capabilities and client.server_capabilities.inlayHintProvider then
-                            map("n", "<leader>th", function()
+                            map("n", "<leader>ti", function()
                                 local current = vim.lsp.inlay_hint.is_enabled({ bufnr = bufnr })
                                 vim.lsp.inlay_hint.enable(not current, { bufnr = bufnr })
                                 vim.notify("Inlay hints " .. (not current and "enabled" or "disabled"))

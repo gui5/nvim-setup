@@ -38,6 +38,10 @@ map("n", "<leader>Q", "<cmd>qa<CR>", { desc = "Quit all" })
 map("n", "<Esc>", "<cmd>nohlsearch<CR>", { desc = "Clear search highlight" })
 map("n", "<leader>nh", "<cmd>nohlsearch<CR>", { desc = "Clear search highlights" })
 
+-- Visual search for highlighted selection with * and #
+map("x", "*", [[y/\V<C-R>=escape(@", '/\')<CR><CR>]], { desc = "Search selection forward" })
+map("x", "#", [[y?\V<C-R>=escape(@", '?\')<CR><CR>]], { desc = "Search selection backward" })
+
 -- Move lines up and down
 map("n", "<A-j>", "<cmd>m .+1<CR>==", { desc = "Move line down" })
 map("n", "<A-k>", "<cmd>m .-2<CR>==", { desc = "Move line up" })
@@ -57,8 +61,8 @@ map("n", "[Q", "<cmd>cfirst<CR>", { desc = "First quickfix item" })
 map("n", "]Q", "<cmd>clast<CR>", { desc = "Last quickfix item" })
 
 -- Diagnostic navigation & hover
-map("n", "[d", vim.diagnostic.goto_prev, { desc = "Go to previous diagnostic" })
-map("n", "]d", vim.diagnostic.goto_next, { desc = "Go to next diagnostic" })
+map("n", "[d", function() vim.diagnostic.jump({ count = -1, float = true }) end, { desc = "Go to previous diagnostic" })
+map("n", "]d", function() vim.diagnostic.jump({ count = 1, float = true }) end, { desc = "Go to next diagnostic" })
 map("n", "<leader>cd", vim.diagnostic.open_float, { desc = "Show line diagnostics" })
 map("n", "<leader>cq", vim.diagnostic.setloclist, { desc = "Diagnostics to location list" })
 
@@ -66,7 +70,7 @@ map("n", "<leader>cq", vim.diagnostic.setloclist, { desc = "Diagnostics to locat
 map("v", "y", '"+y', { desc = "Yank visual selection to system clipboard" })
 map({ "n", "v" }, "<leader>y", '"+y', { desc = "Yank to system clipboard" })
 map("n", "<leader>Y", '"+Y', { desc = "Yank line to system clipboard" })
-map({ "n", "v" }, "<leader>p", '"+p', { desc = "Paste from system clipboard" })
+map("n", "<leader>p", '"+p', { desc = "Paste from system clipboard" })
 map({ "n", "v" }, "<leader>P", '"+P', { desc = "Paste before from system clipboard" })
 map("x", "<leader>p", [["_dP]], { desc = "Paste over selection without losing clipboard" })
 

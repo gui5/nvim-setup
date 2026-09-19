@@ -67,6 +67,7 @@ return {
                 { "<leader>b", group = "Buffers & Tabs", icon = "󰈔 " },
                 { "<leader>x", group = "Trouble Diagnostics", icon = "󰔫 " },
                 { "<leader>h", group = "Harpoon Quick Menu", icon = "󱡁 " },
+                { "<leader>m", group = "Markdown (Render/Preview)", icon = " " },
             },
         },
     },
@@ -83,9 +84,13 @@ return {
                 if #clients == 0 then
                     return "No LSP"
                 end
+                local seen = {}
                 local names = {}
                 for _, client in ipairs(clients) do
-                    table.insert(names, client.name)
+                    if not seen[client.name] then
+                        seen[client.name] = true
+                        table.insert(names, client.name)
+                    end
                 end
                 return "󰒋 " .. table.concat(names, ", ")
             end

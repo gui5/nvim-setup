@@ -51,7 +51,7 @@ return {
             local function make_root_dir(markers)
                 return function(bufnr, on_dir)
                     local fname = vim.api.nvim_buf_get_name(bufnr)
-                    local root = vim.fs.root(fname, markers) or vim.fs.dirname(fname)
+                    local root = (fname ~= "" and (vim.fs.root(fname, markers) or vim.fs.dirname(fname))) or (vim.uv or vim.loop).cwd() or vim.fn.getcwd()
                     if root and root ~= "" then
                         on_dir(root)
                     end
@@ -82,7 +82,7 @@ return {
 
                     -- Inlay hints toggle (Neovim 0.10+ / 0.12 native)
                     if client and client.server_capabilities and client.server_capabilities.inlayHintProvider then
-                        map("n", "<leader>th", function()
+                        map("n", "<leader>ti", function()
                             local current = vim.lsp.inlay_hint.is_enabled({ bufnr = bufnr })
                             vim.lsp.inlay_hint.enable(not current, { bufnr = bufnr })
                             vim.notify("Inlay hints " .. (not current and "enabled" or "disabled"))
@@ -95,7 +95,7 @@ return {
                         map("n", "<leader>cT", "<cmd>ClangdTypeHierarchy<CR>", "Clangd Type Hierarchy")
                         map("n", "<leader>cM", "<cmd>ClangdMemoryUsage<CR>", "Clangd Memory Usage")
                         map("n", "<leader>cA", "<cmd>ClangdAST<CR>", "Clangd AST View")
-                        map("n", "<leader>cs", "<cmd>ClangdSymbolInfo<CR>", "Clangd Symbol Info")
+                        map("n", "<leader>ci", "<cmd>ClangdSymbolInfo<CR>", "Clangd Symbol Info")
                     end
                 end,
             })
