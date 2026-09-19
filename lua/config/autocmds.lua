@@ -78,3 +78,52 @@ autocmd("FileType", {
     end,
     desc = "C/C++ specific options",
 })
+
+-- Go specific buffer settings (standard Go style requires hard tabs)
+autocmd("FileType", {
+    group = general_group,
+    pattern = { "go", "gomod", "gowork" },
+    callback = function()
+        vim.opt_local.expandtab = false
+        vim.opt_local.tabstop = 4
+        vim.opt_local.shiftwidth = 4
+    end,
+    desc = "Go specific options (hard tabs)",
+})
+
+-- Makefile buffer settings (make requires hard tabs)
+autocmd("FileType", {
+    group = general_group,
+    pattern = { "make" },
+    callback = function()
+        vim.opt_local.expandtab = false
+    end,
+    desc = "Makefile options (hard tabs)",
+})
+
+-- Web, Config & Scripting 2-space indentation (TS, JS, React, HTML, CSS, JSON, YAML, Lua)
+autocmd("FileType", {
+    group = general_group,
+    pattern = {
+        "javascript",
+        "javascriptreact",
+        "typescript",
+        "typescriptreact",
+        "html",
+        "css",
+        "scss",
+        "less",
+        "json",
+        "json5",
+        "jsonc",
+        "yaml",
+        "lua",
+    },
+    callback = function()
+        vim.opt_local.expandtab = true
+        vim.opt_local.tabstop = 2
+        vim.opt_local.shiftwidth = 2
+        vim.opt_local.softtabstop = 2
+    end,
+    desc = "2-space indentation for Web and configuration formats",
+})

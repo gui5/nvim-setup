@@ -26,9 +26,9 @@ return {
         opts = {
             formatters_by_ft = {
                 -- C / C++ / CUDA
-                c = { "clang_format" },
-                cpp = { "clang_format" },
-                cuda = { "clang_format" },
+                c = { "clang-format" },
+                cpp = { "clang-format" },
+                cuda = { "clang-format" },
 
                 -- CMake & Lua
                 cmake = { "gersemi", lsp_format = "fallback" },
@@ -62,7 +62,7 @@ return {
                 rust = { "rustfmt" },
             },
             formatters = {
-                clang_format = {
+                ["clang-format"] = {
                     command = "clang-format",
                     args = { "-assume-filename", "$FILENAME" },
                 },
@@ -77,7 +77,7 @@ return {
                     return nil
                 end
                 return {
-                    timeout_ms = 800,
+                    timeout_ms = 2000,
                     lsp_format = "fallback",
                 }
             end,

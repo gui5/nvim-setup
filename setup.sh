@@ -270,7 +270,7 @@ fi
 # ------------------------------------------------------------------------------
 log_info "Configuring ~/.config/nvim symlink..."
 
-if [ -e "${TARGET_DIR}" ]; then
+if [ -e "${TARGET_DIR}" ] || [ -L "${TARGET_DIR}" ]; then
     if [ -L "${TARGET_DIR}" ] && [ "$(readlink -f "${TARGET_DIR}")" = "${SCRIPT_DIR}" ]; then
         log_success "${TARGET_DIR} is already linked to ${SCRIPT_DIR}"
     else
@@ -287,21 +287,21 @@ else
 fi
 
 # ------------------------------------------------------------------------------
-# 6. Bootstrap and Sync Neovim Plugins via lazy.nvim
+# 7. Bootstrap and Sync Neovim Plugins via lazy.nvim
 # ------------------------------------------------------------------------------
 log_info "Syncing Neovim plugins via lazy.nvim..."
 nvim --headless "+Lazy! sync" "+qa" || true
 log_success "Neovim plugins synchronized."
 
 # ------------------------------------------------------------------------------
-# 7. Install Treesitter Parsers
+# 8. Install Treesitter Parsers
 # ------------------------------------------------------------------------------
 log_info "Compiling Treesitter parsers (C/C++, Rust, Web/React, Python, Go, Lua, etc.)..."
-nvim --headless -c "lua require('nvim-treesitter.install').install({'c','cpp','rust','ron','cmake','make','ninja','lua','vim','vimdoc','bash','json','json5','yaml','toml','markdown','markdown_inline','dockerfile','javascript','typescript','tsx','html','css','scss','python','go','gomod','gowork','gosum'})" -c "sleep 8" -c "qa" || true
+nvim --headless -c "lua local task = require('nvim-treesitter.install').install({'c','cpp','rust','ron','cmake','make','ninja','lua','vim','vimdoc','bash','json','json5','yaml','toml','markdown','markdown_inline','dockerfile','javascript','typescript','tsx','html','css','scss','python','go','gomod','gowork','gosum'}); if task and task.wait then task:wait(120000) end" -c "qa" || true
 log_success "Treesitter parsers compiled and installed."
 
 # ------------------------------------------------------------------------------
-# 8. Final Health & Diagnostics Check
+# 9. Final Health & Diagnostics Check
 # ------------------------------------------------------------------------------
 echo -e "\n${BOLD}======================================================${RESET}"
 echo -e "${BOLD}               Setup Verification Summary             ${RESET}"

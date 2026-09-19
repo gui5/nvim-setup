@@ -106,17 +106,18 @@ Leader key is set to **`<Space>`**. Pressing `<Space>` will bring up an interact
 | `<leader>cr` | Rename Symbol | Rename variable/function across project |
 | `<leader>ca` | Code Action | Apply quick fixes, imports, and suggestions |
 | `<leader>cM` | Expand Macro | Expand Rust macro recursively at cursor (`rustaceanvim`) |
-| `<leader>cd` | Open Docs.rs | Open official online documentation for symbol (`rustaceanvim`) |
+| `<leader>co` | Open Docs.rs | Open official online documentation for symbol (`rustaceanvim`) |
 | `<leader>cR` | Rust Runnables | Interactively choose and run Rust binaries/benchmarks |
 | `<leader>ct` | Rust Testables | Interactively choose and run Rust unit/integration tests |
 | `<leader>ce` | Explain Error | Show official Rust error code explanation (e.g. E0382) |
 | `<leader>cp` | Parent Module | Jump to parent module in Rust |
 | `<leader>ch` | Switch Source/Header | Instant toggle between `.h`/`.hpp` and `.c`/`.cpp` |
 | `<leader>cT` | Type Hierarchy | Explore base and derived classes (C++) |
+| `<leader>ci` | Clangd Symbol Info | Inspect detailed AST & symbol info (`clangd`) |
 | `<leader>cs` | Code Outline | Open Trouble symbols outline (functions, structs) |
 | `<leader>cl` | LSP Definitions/Refs | Open Trouble LSP definitions/references panel |
 | `<leader>cf` | Format Buffer | Format with Prettier, Rustfmt, Ruff, Gofumpt, or Clang-Format |
-| `<leader>th` | Toggle Inlay Hints | Show / hide variable types and parameter hints inline |
+| `<leader>ti` | Toggle Inlay Hints | Show / hide variable types and parameter hints inline |
 | `<leader>tf` | Toggle Auto-format | Enable / disable format-on-save |
 
 ---
@@ -227,20 +228,38 @@ Leader key is set to **`<Space>`**. Pressing `<Space>` will bring up an interact
 
 ---
 
-### 10. Search & Telescope (`<leader>f`)
+### 10. Search & Code Discovery (`<leader>f` / Flash Motions)
 
 | Keymap | Action | Description |
 |---|---|---|
-| `<leader>ff` | Find Files | Fuzzy search project files |
-| `<leader>fg` | Live Grep | Search file contents with Ripgrep |
-| `<leader>fb` | Buffers | Search open buffers |
+| `<leader>ff` | Find Files | Fuzzy search project files (including hidden dotfiles) |
+| `<leader>fa` | Find All Files | Search all files including `.gitignore` and build artifacts |
+| `<leader>fg` | Live Grep | Fast regex & text search across project with Ripgrep |
+| `<leader>fw` | Find Word / Selection | Grep word under cursor or visual selection across project |
+| `<leader>fW` | Find Exact Word | Grep exact word boundaries (`\bword\b`) across project |
+| `<leader>/` | Find in Buffer | Instant fuzzy search inside the active buffer |
+| `<leader>fl` | Buffer Lines | Search lines in current buffer with live preview |
+| `<leader>fo` | Recent Files | Search recently opened / old files |
+| `<leader>fb` | Open Buffers | Search and switch active buffers (`<C-d>` to close) |
+| `<leader>fs` | Document Symbols | Fuzzy search functions, structs, classes in current file |
+| `<leader>fS` | Workspace Symbols | Dynamic symbol search across the entire project |
+| `<leader>fi` | Implementations | Jump to interface implementations |
+| `<leader>fci` | Incoming Calls | LSP call hierarchy: find callers of function |
+| `<leader>fco` | Outgoing Calls | LSP call hierarchy: find callees of function |
+| `<leader>fd` | Project Diagnostics | Search all errors and warnings across workspace |
+| `<leader>fD` | Buffer Diagnostics | Search diagnostics in current buffer only |
 | `<leader>ft` | Find TODOs | Search all `TODO:`, `FIXME:`, `BUG:`, `NOTE:` comments |
-| `<leader>fs` | Document Symbols | Fuzzy search functions, classes, structs |
-| `<leader>fS` | Workspace Symbols | Search symbols across the entire codebase |
-| `<leader>fd` | Diagnostics | List project warnings and errors |
-| `<leader>fh` | Help Tags | Search Neovim documentation |
+| `<leader>fm` | Marks | Search and jump to bookmark marks |
+| `<leader>fj` | Jump List | Search cursor jump history |
+| `<leader>fq` | Quickfix List | Search quickfix entries |
+| `<leader>fr` | Resume Search | Re-open previous Telescope search with state preserved |
 | `<leader>fk` | Keymaps | Search all registered keybindings |
-| `<leader>fr` | Resume Search | Re-open last Telescope search |
+| `<leader>fc` | Commands | Search and execute Neovim commands |
+| `<leader>fh` | Help Tags | Search Neovim documentation tags |
+| `s` | Flash Jump | Jump to any 2-character label on screen instantly |
+| `S` | Flash Treesitter | Select / jump to Treesitter AST nodes and scopes |
+| `*` (visual) | Search Forward | Search buffer for visually highlighted text |
+| `#` (visual) | Search Backward | Search buffer backward for visually highlighted text |
 
 ---
 

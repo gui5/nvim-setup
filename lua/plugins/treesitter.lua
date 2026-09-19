@@ -52,7 +52,21 @@ return {
                 "gosum",
             }
 
-            pcall(ts.install, target_parsers)
+            local ok_cfg, ts_cfg = pcall(require, "nvim-treesitter.config")
+            local missing = {}
+            if ok_cfg then
+                local installed = ts_cfg.get_installed("parsers")
+                for _, p in ipairs(target_parsers) do
+                    if not vim.list_contains(installed, p) then
+                        table.insert(missing, p)
+                    end
+                end
+            else
+                missing = target_parsers
+            end
+            if #missing > 0 then
+                pcall(ts.install, missing)
+            end
 
             -- Enable treesitter highlighting automatically for supported buffers
             vim.api.nvim_create_autocmd("FileType", {
