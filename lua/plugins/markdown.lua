@@ -48,6 +48,81 @@ return {
         },
     },
 
+    -- In-Buffer Diagram Rendering (Mermaid, PlantUML, D2, Gnuplot) via Kitty/Sixel graphics
+    {
+        "3rd/diagram.nvim",
+        dependencies = {
+            {
+                "3rd/image.nvim",
+                opts = {
+                    backend = "kitty",
+                    processor = "magick_cli",
+                    integrations = {
+                        markdown = {
+                            enabled = true,
+                            clear_in_insert_mode = false,
+                            download_remote_images = true,
+                            only_render_image_at_cursor = false,
+                            filetypes = { "markdown", "vimwiki" },
+                        },
+                    },
+                    max_width = nil,
+                    max_height = nil,
+                    max_width_window_percentage = nil,
+                    max_height_window_percentage = 50,
+                    window_overlap_clear_enabled = false,
+                    window_overlap_clear_ft_ignore = { "cmp_menu", "cmp_docs", "" },
+                    editor_only_render_when_focused = false,
+                    tmux_show_only_in_active_window = false,
+                    hijack_file_patterns = { "*.png", "*.jpg", "*.jpeg", "*.gif", "*.webp", "*.avif" },
+                },
+            },
+        },
+        ft = { "markdown" },
+        opts = {
+            events = {
+                render_buffer = { "InsertLeave", "BufWinEnter", "TextChanged" },
+                clear_buffer = { "BufLeave" },
+            },
+            renderer_options = {
+                mermaid = {
+                    background = "transparent",
+                    theme = "dark",
+                    scale = 1,
+                },
+            },
+        },
+        keys = {
+            {
+                "<leader>md",
+                function()
+                    require("diagram").show_diagram_hover()
+                end,
+                mode = "n",
+                ft = { "markdown" },
+                desc = "Markdown: View Diagram at Cursor (Tab)",
+            },
+            {
+                "<leader>mD",
+                function()
+                    require("diagram").render()
+                end,
+                mode = "n",
+                ft = { "markdown" },
+                desc = "Markdown: Refresh In-Buffer Diagrams",
+            },
+            {
+                "<leader>mc",
+                function()
+                    require("diagram").clear()
+                end,
+                mode = "n",
+                ft = { "markdown" },
+                desc = "Markdown: Clear In-Buffer Diagrams",
+            },
+        },
+    },
+
     -- Live Browser Preview with sync scroll, KaTeX, and Mermaid
     {
         "iamcco/markdown-preview.nvim",

@@ -23,7 +23,7 @@ Run the included automated setup script:
 - **🧠 Full Multi-Language Intelligence**:
   - **C & C++**: `clangd` + `clangd_extensions` (AST view, type hierarchy, source/header switch, memory layout).
   - **Rust**: `mrcjkb/rustaceanvim` + `rust-analyzer` (macro expansion, docs.rs, runnables/testables, clippy check on save, parent module navigation).
-  - **Markdown & Documentation**: `marksman` LSP + `render-markdown.nvim` (in-buffer rich styling for headings, codeblocks, checkboxes, callouts) + `markdown-preview.nvim` (live browser preview).
+  - **Markdown & Documentation**: `marksman` LSP + `render-markdown.nvim` (in-buffer rich styling for headings, codeblocks, checkboxes, callouts) + `diagram.nvim` & `image.nvim` (in-buffer inline Mermaid, PlantUML, D2 graphic rendering) + `markdown-preview.nvim` (live browser preview).
   - **Web & React**: `ts_ls` (TypeScript/JS), `tailwindcss` (Tailwind completions), `html`, `cssls`, `eslint`, `emmet_language_server`.
   - **Python**: `pyright` (type analysis & completions) + `ruff` (lightning-fast linting & code actions).
   - **Go (Golang)**: `gopls` (auto-imports, staticcheck, parameter inlay hints, placeholders).
@@ -286,6 +286,18 @@ Leader key is set to **`<Space>`**. Pressing `<Space>` will bring up an interact
 | `cs"'` | Change `"` to `'` | `"foo"` ➔ `'foo'` |
 | `ds"` | Delete surrounding `"` | `"foo"` ➔ `foo` |
 | `ds)` | Delete surrounding `()` | `(val)` ➔ `val` |
+
+---
+
+### 13. Markdown & Diagrams (`<leader>m`)
+
+| Keymap | Action | Description |
+|---|---|---|
+| `<leader>mr` | Toggle In-Buffer Styling | Toggle rich headings, tables, checkboxes, callouts (`render-markdown.nvim`) |
+| `<leader>md` | View Diagram at Cursor | Open rendered Mermaid / PlantUML / D2 diagram in a dedicated tab (`diagram.nvim`) |
+| `<leader>mD` | Refresh Diagrams | Re-render in-buffer diagram graphics (`diagram.nvim`) |
+| `<leader>mc` | Clear Diagrams | Clear rendered diagram graphics from buffer (`diagram.nvim`) |
+| `<leader>mp` | Toggle Browser Preview | Live browser preview with sync scroll & Mermaid (`markdown-preview.nvim`) |
 
 ---
 
