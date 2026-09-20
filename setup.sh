@@ -121,10 +121,10 @@ if [ ${#MISSING_DEPS[@]} -gt 0 ]; then
     # Ubuntu / Debian
     if command -v apt-get >/dev/null 2>&1; then
         echo -e "\nDetected ${BOLD}Ubuntu / Debian${RESET}. Recommended install command:"
-        echo -e "  sudo apt-get update && sudo apt-get install -y neovim gcc g++ clangd clang-format gdb lldb nodejs npm python3 python3-pip golang-go rustc cargo rustfmt cmake make ninja-build valgrind wl-clipboard xclip git ripgrep fd-find curl tar unzip"
+        echo -e "  sudo apt-get update && sudo apt-get install -y neovim gcc g++ clangd clang-format gdb lldb nodejs npm python3 python3-pip golang-go rustc cargo rustfmt cmake make ninja-build valgrind wl-clipboard xclip git ripgrep fd-find curl tar unzip imagemagick"
         if [ "${EUID:-$(id -u)}" -eq 0 ] || sudo -n true 2>/dev/null; then
             log_info "Attempting automatic package installation via apt..."
-            sudo apt-get update && sudo apt-get install -y neovim gcc g++ clangd clang-format gdb lldb nodejs npm python3 python3-pip golang-go rustc cargo rustfmt cmake make ninja-build valgrind wl-clipboard xclip git ripgrep fd-find curl tar unzip || true
+            sudo apt-get update && sudo apt-get install -y neovim gcc g++ clangd clang-format gdb lldb nodejs npm python3 python3-pip golang-go rustc cargo rustfmt cmake make ninja-build valgrind wl-clipboard xclip git ripgrep fd-find curl tar unzip imagemagick || true
             if command -v fdfind >/dev/null 2>&1 && ! command -v fd >/dev/null 2>&1; then
                 ln -sf "$(command -v fdfind)" "${LOCAL_BIN}/fd"
             fi
@@ -138,9 +138,9 @@ if [ ${#MISSING_DEPS[@]} -gt 0 ]; then
         fi
         if command -v brew >/dev/null 2>&1; then
             echo -e "Recommended Homebrew install command:"
-            echo -e "  brew install neovim llvm node python go rust rust-analyzer cmake make ninja ripgrep fd git curl"
+            echo -e "  brew install neovim llvm node python go rust rust-analyzer cmake make ninja ripgrep fd git curl imagemagick"
             log_info "Installing missing dependencies via Homebrew..."
-            brew install neovim llvm node python go rust rust-analyzer cmake make ninja ripgrep fd git curl || true
+            brew install neovim llvm node python go rust rust-analyzer cmake make ninja ripgrep fd git curl imagemagick || true
         else
             log_warn "Homebrew is not installed. Install Homebrew from https://brew.sh to easily get all toolchains."
         fi
@@ -148,19 +148,19 @@ if [ ${#MISSING_DEPS[@]} -gt 0 ]; then
     # Arch Linux
     elif command -v pacman >/dev/null 2>&1; then
         echo -e "\nDetected ${BOLD}Arch Linux${RESET}. Recommended install command:"
-        echo -e "  sudo pacman -S --needed neovim gcc clang gdb nodejs npm python go rust cmake make ninja valgrind wl-clipboard xclip git ripgrep fd curl tar unzip"
+        echo -e "  sudo pacman -S --needed neovim gcc clang gdb nodejs npm python go rust cmake make ninja valgrind wl-clipboard xclip git ripgrep fd curl tar unzip imagemagick"
         if [ "${EUID:-$(id -u)}" -eq 0 ] || sudo -n true 2>/dev/null; then
             log_info "Attempting automatic package installation via pacman..."
-            sudo pacman -S --needed --noconfirm neovim gcc clang gdb nodejs npm python go rust cmake make ninja valgrind wl-clipboard xclip git ripgrep fd curl tar unzip || true
+            sudo pacman -S --needed --noconfirm neovim gcc clang gdb nodejs npm python go rust cmake make ninja valgrind wl-clipboard xclip git ripgrep fd curl tar unzip imagemagick || true
         fi
 
     # Fedora / RHEL
     elif command -v dnf >/dev/null 2>&1; then
         echo -e "\nDetected ${BOLD}Fedora / RHEL${RESET}. Recommended install command:"
-        echo -e "  sudo dnf install -y neovim gcc gcc-c++ clang-tools-extra gdb lldb nodejs npm python3 golang rust cargo rust-analyzer cmake make ninja-build valgrind wl-clipboard xclip git ripgrep fd-find curl tar unzip"
+        echo -e "  sudo dnf install -y neovim gcc gcc-c++ clang-tools-extra gdb lldb nodejs npm python3 golang rust cargo rust-analyzer cmake make ninja-build valgrind wl-clipboard xclip git ripgrep fd-find curl tar unzip ImageMagick"
         if [ "${EUID:-$(id -u)}" -eq 0 ] || sudo -n true 2>/dev/null; then
             log_info "Attempting automatic package installation via dnf..."
-            sudo dnf install -y neovim gcc gcc-c++ clang-tools-extra gdb lldb nodejs npm python3 golang rust cargo rust-analyzer cmake make ninja-build valgrind wl-clipboard xclip git ripgrep fd-find curl tar unzip || true
+            sudo dnf install -y neovim gcc gcc-c++ clang-tools-extra gdb lldb nodejs npm python3 golang rust cargo rust-analyzer cmake make ninja-build valgrind wl-clipboard xclip git ripgrep fd-find curl tar unzip ImageMagick || true
         fi
     fi
 else
@@ -266,7 +266,28 @@ else
 fi
 
 # ------------------------------------------------------------------------------
-# 6. Link Configuration to ~/.config/nvim
+# 6. Check and Install Mermaid CLI (mmdc for in-buffer diagrams)
+# ------------------------------------------------------------------------------
+log_info "Checking Mermaid CLI (mmdc)..."
+
+if command -v mmdc >/dev/null 2>&1; then
+    log_success "mmdc is installed at $(command -v mmdc)"
+else
+    if command -v npm >/dev/null 2>&1; then
+        log_info "Installing @mermaid-js/mermaid-cli globally via npm..."
+        npm install -g @mermaid-js/mermaid-cli || true
+        if command -v mmdc >/dev/null 2>&1; then
+            log_success "Installed mmdc to $(command -v mmdc)"
+        else
+            log_warn "npm install finished; if mmdc is not yet in PATH, ensure npm global bin is in your PATH."
+        fi
+    else
+        log_warn "npm not found; install Node.js & npm and run 'npm install -g @mermaid-js/mermaid-cli' for Mermaid diagram rendering."
+    fi
+fi
+
+# ------------------------------------------------------------------------------
+# 7. Link Configuration to ~/.config/nvim
 # ------------------------------------------------------------------------------
 log_info "Configuring ~/.config/nvim symlink..."
 
@@ -287,21 +308,21 @@ else
 fi
 
 # ------------------------------------------------------------------------------
-# 7. Bootstrap and Sync Neovim Plugins via lazy.nvim
+# 8. Bootstrap and Sync Neovim Plugins via lazy.nvim
 # ------------------------------------------------------------------------------
 log_info "Syncing Neovim plugins via lazy.nvim..."
 nvim --headless "+Lazy! sync" "+qa" || true
 log_success "Neovim plugins synchronized."
 
 # ------------------------------------------------------------------------------
-# 8. Install Treesitter Parsers
+# 9. Install Treesitter Parsers
 # ------------------------------------------------------------------------------
-log_info "Compiling Treesitter parsers (C/C++, Rust, Web/React, Python, Go, Lua, etc.)..."
-nvim --headless -c "lua local task = require('nvim-treesitter.install').install({'c','cpp','rust','ron','cmake','make','ninja','lua','vim','vimdoc','bash','json','json5','yaml','toml','markdown','markdown_inline','dockerfile','javascript','typescript','tsx','html','css','scss','python','go','gomod','gowork','gosum'}); if task and task.wait then task:wait(120000) end" -c "qa" || true
+log_info "Compiling Treesitter parsers (C/C++, Rust, Web/React, Python, Go, Lua, Mermaid, etc.)..."
+nvim --headless -c "lua local task = require('nvim-treesitter.install').install({'c','cpp','rust','ron','cmake','make','ninja','lua','vim','vimdoc','bash','json','json5','yaml','toml','markdown','markdown_inline','latex','mermaid','dockerfile','javascript','typescript','tsx','html','css','scss','python','go','gomod','gowork','gosum'}); if task and task.wait then task:wait(120000) end" -c "qa" || true
 log_success "Treesitter parsers compiled and installed."
 
 # ------------------------------------------------------------------------------
-# 9. Final Health & Diagnostics Check
+# 10. Final Health & Diagnostics Check
 # ------------------------------------------------------------------------------
 echo -e "\n${BOLD}======================================================${RESET}"
 echo -e "${BOLD}               Setup Verification Summary             ${RESET}"
@@ -365,9 +386,17 @@ if command -v goimports >/dev/null 2>&1; then report_tool "Goimports Formatter" 
 echo -e "\n${BOLD}--- Lua & Tooling ---${RESET}"
 if command -v stylua >/dev/null 2>&1 || [ -x "${LOCAL_BIN}/stylua" ]; then report_tool "StyLua Formatter" "stylua"; fi
 
-echo -e "\n${BOLD}--- Markdown & Documentation ---${RESET}"
+echo -e "\n${BOLD}--- Markdown & Diagram Tooling ---${RESET}"
 report_tool "Marksman (Markdown LSP)" "marksman"
 report_tool "Prettier (Markdown Formatter)" "prettier"
+if command -v magick >/dev/null 2>&1; then
+    report_tool "ImageMagick (magick)" "magick"
+elif command -v convert >/dev/null 2>&1; then
+    report_tool "ImageMagick (convert)" "convert"
+else
+    report_tool "ImageMagick" "magick"
+fi
+report_tool "Mermaid CLI (mmdc)" "mmdc"
 
 echo -e "\n${BOLD}Setup completed successfully!${RESET}"
 echo -e "Start editing with:"

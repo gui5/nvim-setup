@@ -38,6 +38,7 @@ return {
                 "markdown",
                 "markdown_inline",
                 "latex",
+                "mermaid",
                 "dockerfile",
                 "javascript",
                 "typescript",
